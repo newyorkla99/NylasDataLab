@@ -1,0 +1,97 @@
+---
+title: "Project 3"
+author: "Nyla Morrison"
+date: "2024-07-10"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+
+```{r}
+#installs dplyr
+#install.packages("dplyr")
+library(dplyr)
+#installs nycflights13
+#install.packages("nycflights13")
+library(nycflights13)
+
+#Prints flights dataset
+flights
+
+#finds characters in flights and sums
+sapply(flights, is.character)
+sum(sapply(flights, is.character))
+
+#finds unique destination airlines
+unique(flights$dest)
+sum(sapply(flights$dest))
+
+#finds unique origin airlines
+origflights<-unique(flights$origin)
+summary(origflights)
+
+#LGA destinations
+airportLGA<- filter(flights, origin== "LGA")
+print (airportLGA)
+LGADEST<-unique(airportLGA$dest)
+summary(LGADEST)
+filter(flights, origin== "LGA")
+
+#Unique carriers flown from JFK
+filter(flights, origin== "JFK")
+JFKflights<- filter(flights, origin== "JFK")
+JFKcarriers<- unique(JFKflights$carrier)
+print (JFKcarriers)
+summary (JFKcarriers)
+
+#AA flights in March
+AAflights<- filter(flights, carrier=="AA")
+print(AAflights)
+MarAA<- AAflights %>% filter(month=="3")
+dim(MarAA)
+
+#Find the carrier that flew the most in May 2013
+may2013 <- flights %>% filter(year== 2013, month== 5)
+print(may2013)
+may2013carrier= may2013 %>% group_by(carrier) %>% count(carrier, sort = TRUE)
+print(may2013carrier)
+
+#Find UA's most popular destination
+UAmay2013 <- flights %>% filter(year== 2013, month== 5, carrier== "UA")
+UAmaydest<- UAmay2013 %>% group_by(dest) %>% count(dest, sort = TRUE)
+print(UAmaydest)
+
+#airports dataset
+airports
+
+#airport 1H2
+airport1<- airports %>% filter(faa=="1H2")
+print(airport1)
+
+#month smallest mean total delay
+fl_new= flights %>% mutate(total_delay= dep_delay+arr_delay) %>% select(month, carrier, origin, dest, distance, total_delay, arr_delay)
+meandelay<- flights %>% group_by(month) %>% summarize(mean(total_delay))
+

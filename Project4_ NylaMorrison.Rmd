@@ -1,0 +1,138 @@
+---
+title: "Project 4"
+author: "Nyla Morrison"
+date: "2024-07-12"
+output: html_document
+# Honors Statement: I have not given or received any unauthorized assistance on this assignment
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Question 1
+```{r}
+###install.packages("tidyverse")
+library(tidyverse)
+library(readr)
+ames_alcohol_test1 <- read_csv("ames_alcohol_test1.csv")
+View(ames_alcohol_test1)
+dim(ames_alcohol_test1)
+```
+
+
+
+## Question 2
+```{r}
+unique(ames_alcohol_test1$year)
+```
+
+
+
+## Question 3
+```{r}
+alcoholyear<- ames_alcohol_test1 %>% group_by(year) %>% count(year, sort = TRUE)
+print(alcoholyear)
+```
+
+
+## Question 4
+```{r}
+alcoholloc<- ames_alcohol_test1 %>% group_by(location) %>% count(location, sort = TRUE)
+print(alcoholloc)
+```
+
+
+## Question 5
+```{r}
+alcoholhour<- ames_alcohol_test1 %>% group_by(hour) %>% count(hour, sort = TRUE)
+print(alcoholhour)
+```
+
+
+
+## Question 6
+```{r}
+quarter <- ames_alcohol_test1 %>% filter(year== 2017, month<4)
+print(quarter)
+dim(quarter)
+```
+
+
+
+## Question 7
+```{r}
+alcoholtest<- ames_alcohol_test1 %>% group_by(year) %>% group_by(month)
+print(alcoholtest)
+alcoholtest2013<- alcoholtest %>% filter(year== 2013)
+print(alcoholtest2013)
+alcoholtest2013 %>% count(month, sort = TRUE)
+
+alcoholtest2014<- alcoholtest %>% filter(year== 2014)
+print(alcoholtest2014)
+alcoholtest2014 %>% count(month, sort = TRUE)
+
+alcoholtest2015<- alcoholtest %>% filter(year== 2015)
+print(alcoholtest2015)
+alcoholtest2015 %>% count(month, sort = TRUE)
+
+alcoholtest2016<- alcoholtest %>% filter(year== 2016)
+print(alcoholtest2016)
+alcoholtest2016 %>% count(month, sort = TRUE)
+
+alcoholtest2017<- alcoholtest %>% filter(year== 2017)
+print(alcoholtest2017)
+alcoholtest2017 %>% count(month, sort = TRUE)
+```
+
+
+
+## Question 8
+```{r}
+testmale<-ames_alcohol_test1 %>% filter(sex=="M")
+dim(testmale)
+testfemale<-ames_alcohol_test1 %>% filter(sex=="F")
+dim(testfemale)
+```
+
+
+## Question 9 
+```{r}
+df_clean <- ames_alcohol_test1[!is.na(ames_alcohol_test1$sex),]
+print(df_clean)
+df_new= df_clean %>% mutate(Res=((Res1+Res2)/2)) %>% select(year, month, day, hour, location, sex, Res1, Res2, Res)
+print(df_new)
+dfnewnew<- tapply(df_new$Res, df_new$sex, mean)
+print(dfnewnew)
+```
+
+
+## Question 10
+```{r}
+drunkfolk<- ames_alcohol_test1 %>% filter(Res1 > 0.080|Res2 > 0.080)
+print(drunkfolk)
+1159/1556
+```
+
+
+## Question 11
+```{r}
+soberfolk<- ames_alcohol_test1 %>% filter(Res1 ==0|Res2 ==0)
+print(soberfolk)
+203/1556
+```
+
+
+## Question 12
+```{r}
+ames_alcohol_test1 <- ames_alcohol_test1 %>%
+  mutate(dui=ifelse(Res1> 0.080|Res2> 0.080, 1, 0))
+print(ames_alcohol_test1)
+duistotaltest<- ames_alcohol_test1 %>% group_by(month) %>% count(month, sort=TRUE)
+print(duistotaltest)
+duipositive<- ames_alcohol_test1 %>% filter(ames_alcohol_test1$dui==1) %>% count(month, sort=TRUE)
+print(duipositive)
+```
+
+
+
